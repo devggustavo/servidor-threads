@@ -7,3 +7,14 @@ Deverá ser criado um cliente que irá enviar uma mensagem para a porta que o se
 Uma thread para enviar a mensagem com a intenção de liberar o terminal para que outra mensagem possa ser enviada em seguida
 Outra thread para receber a resposta do servidor e imprimir na tela a resposta
 Comunicação via TCP ou UDP
+
+# Iniciar Servidor
+
+node servidor.js
+
+# Iniciar Cliente
+
+node cliente.js
+
+Trabalho desenvolvido por: Gustavo Dias, Levir Menezes, Milena Silva
+

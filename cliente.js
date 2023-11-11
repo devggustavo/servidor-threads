@@ -1,42 +1,47 @@
+// Importando os módulos necessários: 'net' para networking e 'readline' para leitura de linha de comando
 const net = require('net');
 const readline = require('readline');
 
+// Definindo o host e a porta para a conexão do socket
 const host = 'localhost';
 const port = 12345;
 
+// Criando um novo socket para o cliente
 const client = new net.Socket();
 
-// Cria uma interface para ler linhas do terminal
+// Configurando a interface de leitura de linha de comando
 const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: 'Digite sua mensagem: '
+    input: process.stdin,   // Define a entrada padrão do terminal como entrada
+    output: process.stdout, // Define a saída padrão do terminal como saída
+    prompt: 'Digite sua mensagem: ' // Define o texto do prompt no terminal
 });
 
+// Conectando o cliente ao servidor
 client.connect(port, host, () => {
     console.log('Conectado ao servidor.');
-    rl.prompt(); // Exibe o prompt inicial
-
-    // Envia mensagem quando o usuário digitar algo
-    rl.on('line', (line) => {
-        client.write(line); // Não chama rl.prompt() aqui
-    });
+    rl.prompt(); // Exibe o prompt de mensagem após a conexão ser estabelecida
 });
 
-// Lida com dados recebidos do servidor
+// Evento acionado quando uma linha (mensagem) é inserida no terminal
+rl.on('line', (line) => {
+    client.write(line); // Envia a linha para o servidor
+    // O prompt não é chamado aqui para evitar sobreposição com respostas do servidor
+});
+
+// Evento acionado quando dados são recebidos do servidor
 client.on('data', (data) => {
     console.log('\nResposta do servidor: ' + data.toString());
-    rl.prompt(); // Exibe o prompt após receber a resposta do servidor
+    rl.prompt(); // Exibe o prompt novamente após receber a resposta do servidor
 });
 
-// Lida com o fechamento da conexão
+// Evento acionado quando a conexão é fechada
 client.on('close', () => {
     console.log('Conexão encerrada.');
-    rl.close();
+    rl.close(); // Fecha a interface de leitura de linha de comando
 });
 
-// Lida com erros
+// Evento acionado em caso de erro de conexão
 client.on('error', (err) => {
     console.error('Erro de conexão: ' + err.message);
-    rl.close();
+    rl.close(); // Fecha a interface de leitura de linha de comando em caso de erro
 });
